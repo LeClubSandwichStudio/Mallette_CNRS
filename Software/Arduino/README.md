@@ -13,6 +13,10 @@
 - Read PH with temperature
 - Calibrate PH probe
 
-> Read EC
-> Read EC with temperature
-> Read Turbity
+> Electroconductivity
+- Read EC
+- Read EC with temperature
+- Calibrate EC probe
+
+> Turbity
+- Read turbidity
