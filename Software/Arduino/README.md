@@ -6,9 +6,13 @@
 
 # EXAMPLE CODES
 > TEMPERATURE
->>> Read temperature
-> Read PH
-> Read PH with temperature
+- Read temperature
+
+> PH
+- Read PH 
+- Read PH with temperature
+- Calibrate PH probe
+
 > Read EC
 > Read EC with temperature
 > Read Turbity
