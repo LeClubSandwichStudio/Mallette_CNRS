@@ -3,6 +3,10 @@ Water Analyser Briefcase for scientist
 > Description
 
 # Key Features
+> Hardware
+
+
+> Software
 
 # Summary
 
