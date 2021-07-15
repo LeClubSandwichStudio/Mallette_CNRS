@@ -79,3 +79,20 @@ sudo service --status-all
 > Copy :file_folder: **html** from github repository
 
 > Past :file_folder: **html** into your local Raspi folder /home/var/www
+
+### Test your html page
+> Verify that you are connected to the Raspberry Wifi
+
+> Check if there is any issue with the PHP
+```python
+sudo tail -n 20 /var/log/apache2/error.log
+```
+> If there is no issue
+```python
+sudo service apache2 restart
+```
+> Reboot the Raspi
+```python
+sudo reboot 
+```
+:warning: **Even if you can display the webpage, buttons are not yet running** :warning:
