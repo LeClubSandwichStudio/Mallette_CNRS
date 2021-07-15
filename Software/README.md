@@ -7,7 +7,9 @@ FEATURES
 - measure temperature
 - measure electroconductivity
 - measure ph
-- measure turbidity
+- measure turbidity (with specific formula)
+- check serial to read new commands
+- send json to serial 
 
 DEPENDENCIES
 
