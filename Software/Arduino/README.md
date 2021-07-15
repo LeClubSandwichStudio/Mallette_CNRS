@@ -1,8 +1,8 @@
-#BRIEF
+# BRIEF
 
 Sample Arduino code to use Water Briefcase Analyzer version 1.2
 
-#FEATURES
+# FEATURES
 
 - measure temperature
 - measure electroconductivity
@@ -11,7 +11,7 @@ Sample Arduino code to use Water Briefcase Analyzer version 1.2
 - check serial to read new commands
 - send json to serial 
 
-#DEPENDENCIES
+# DEPENDENCIES
 
 - DFROBOT EC : https://github.com/DFRobot/DFRobot_EC
 - DFROBOT PH : https://github.com/DFRobot/DFRobot_PH
