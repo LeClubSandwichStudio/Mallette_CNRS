@@ -48,7 +48,7 @@ sudo reboot
 ```
 ### Add permission to modify webpage folder
 ```python
-chmod -R 777 /var/www/
+sudo chmod -R 777 /var/www/
 ```
 > Check your permission and access
 ```python
