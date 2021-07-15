@@ -8,14 +8,14 @@
 
 # OS Installation
 
-## Installation [RaspOS](https://www.raspberrypi.org/software/)
+### Installation [RaspOS](https://www.raspberrypi.org/software/)
 > id : pi
 
 > mdp : kmvwqazh
 
-## Installation [Clavier AZERTY](https://www.framboise314.fr/clavier-virtuel-matchbox-en-azerty-sur-le-raspberry-pi/)
+### Installation [Clavier AZERTY](https://www.framboise314.fr/clavier-virtuel-matchbox-en-azerty-sur-le-raspberry-pi/)
 
-## Installation de [RaspAP](https://raspap.com/#quick) 
+### Installation de [RaspAP](https://raspap.com/#quick) 
 
 Dans les paramètres en se connectant au point d’accès,  
 > modifier le mdp en : "kmvwqazh" 
@@ -24,15 +24,34 @@ Dans les paramètres en se connectant au point d’accès,
 
 > modifier l'IP en : "10.3.141.X" 
 
-## Installation [XRDP](https://linuxize.com/post/how-to-install-xrdp-on-raspberry-pi/)
+### Installation [XRDP](https://linuxize.com/post/how-to-install-xrdp-on-raspberry-pi/)
 
 # Remote desktop test and installation
 
-* **Work In progress** *
+**Work In progress**
+
 *Only use if you need to control remotly the Raspi from your personal desktop without working directly on the Raspi*
 
 # Server and webpage setup
 
+### Check for updates
 ```python
 sudo apt-get update
 ```
+### Upgrade if needed 
+```python
+sudo apt-get upgrade
+```
+### Reboot Raspi
+```python
+sudo reboot
+```
+### Add permission to modify webpage folder
+```python
+chmod -R 777 /var/www/
+```
+> Check your permission and access
+```python
+ls -l /var/www/html/
+```
+
