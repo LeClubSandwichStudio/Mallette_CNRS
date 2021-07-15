@@ -25,3 +25,14 @@ Dans les paramètres en se connectant au point d’accès,
 > modifier l'IP en : "10.3.141.X" 
 
 ## Installation [XRDP](https://linuxize.com/post/how-to-install-xrdp-on-raspberry-pi/)
+
+# Remote desktop test and installation
+
+* **Work In progress** *
+*Only use if you need to control remotly the Raspi from your personal desktop without working directly on the Raspi*
+
+# Server and webpage setup
+
+```python
+sudo apt-get update
+```
