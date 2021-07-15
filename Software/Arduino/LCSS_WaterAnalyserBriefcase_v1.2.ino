@@ -1,0 +1,477 @@
+/*
+ * file LCSS_WaterAnalyserBriefcase_v1.1
+ * 
+ * We use different example codes like : 
+ *
+ * >>> file DFRobot_EC.ino + libraries
+ * @ https://github.com/DFRobot/DFRobot_EC
+ * >>> file DFRobot_PH.ino + libraries
+ * @ https://github.com/DFRobot/DFRobot_PH
+ * 
+ * 
+ */
+
+//////////////////////////////////////////////////
+//                  Bill of Materials
+/////////////////////////////////////////////////
+
+
+//////////////////////////////////////////////////
+//                  Wiring
+/////////////////////////////////////////////////
+/*
+
+GND ->GND 
+VCC:
+  EC and PH:                  VCC to VIN (closest pin to usb connector in the corner)
+  Temperature and turbidity:  VCC to 3.3v (third pin from the usb connector, same side as VIN)
+Signal wire:
+  EC          -> 17 (A3)
+  Tunbidity   -> A21
+  Temperature -> 33 (A14)
+  PH          -> 23 (A9)
+  
+*/
+//////////////////////////////////////////////////
+//                  Commands
+/////////////////////////////////////////////////
+/*
+  {"command":"start"}
+  {"command":"stop"}
+  {"command":"restart"}
+  {"setinterval":"999"}
+*/
+
+//////////////////////////////////////////////////
+//              PIN configuration
+/////////////////////////////////////////////////
+#define PHPIN  23
+#define TEMPPIN 33
+#define ECPIN  17
+#define TURBPINSENSOR A21
+
+
+//////////////////////////////////////////////////
+//                  Libraries
+/////////////////////////////////////////////////
+#include <ArduinoJson.h>
+#include "Korzhenevskiy_tick_tack_2.h"
+#include "DFRobot_PH.h"
+#include "DFRobot_EC.h"
+#include <EEPROM.h>
+#include <OneWire.h>
+#include <TimeLib.h>
+#include <stdio.h>
+#include <time.h>
+#include <LiquidCrystal.h>
+#include <Math.h>
+
+
+//////////////////////////////////////////////////
+//                Declarations
+/////////////////////////////////////////////////
+void measure_sensors();
+OneWire ds(TEMPPIN);
+float phValue, temperature, turbidity, turbidityNTU, ecValue, voltageTurb, voltageEC, voltagePH;
+DFRobot_PH ph;
+DFRobot_EC ec;
+Korzhenevskiy_tick_tack_2 sensor_timer(measure_sensors, 1000);
+DynamicJsonDocument doc(256);
+
+const int rs = 26, en = 25, d0 = 5, d1 = 6, d2 = 7, d3 = 8;
+LiquidCrystal lcd(rs, en, d0, d1, d2, d3);
+int i=0;
+int p=0;
+
+byte customChars[8][8] = {
+    {
+        B00000,
+        B00000,
+        B00000,
+        B00000,
+        B00000,
+        B00001,
+        B00011,
+        B00101
+    },{
+        B00000,
+        B00000,
+        B00000,
+        B00010,
+        B10000,
+        B01101,
+        B11000,
+        B11110
+    },{
+        B00000,
+        B00000,
+        B00010,
+        B01000,
+        B01100,
+        B10010,
+        B01100,
+        B00010
+    },{
+        B01110,
+        B01110,
+        B01111,
+        B11110,
+        B11110,
+        B11111,
+        B11111,
+        B11111
+    },{
+        B11100,
+        B11100,
+        B01100,
+        B11110,
+        B10111,
+        B11001,
+        B00111,
+        B11101
+    },{
+        B10000,
+        B00000,
+        B00000,
+        B00000,
+        B00000,
+        B10000,
+        B11100,
+        B11111
+    },{
+        B11111,
+        B11111,
+        B00000,
+        B00000,
+        B11111,
+        B00000,
+        B11111,
+        B11111
+    },{
+        B11111,
+        B11111,
+        B00000,
+        B11111,
+        B00000,
+        B00000,
+        B00000,
+        B00000
+    }
+};
+
+byte Data[2][8] = {
+    {
+      B00000,
+  B11111,
+  B01010,
+  B00111,
+  B00010,
+  B00010,
+  B00010,
+  B00010
+    },{
+  B00000,
+  B11000,
+  B10000,
+  B00001,
+  B00001,
+  B00101,
+  B10101,
+  B10101
+    }
+};
+
+int val=0;
+void drawBanner();
+
+
+
+//////////////////////////////////////////////////
+//                   setup
+/////////////////////////////////////////////////
+void setup() {
+  //sensor_timer.start();
+  Serial.begin(9600);
+  ph.begin();
+  ec.begin();
+  pinMode(2, OUTPUT);
+  pinMode(3, OUTPUT);
+  pinMode(4, OUTPUT);
+  pinMode(5, OUTPUT);
+  pinMode(9, OUTPUT);
+  pinMode(10, OUTPUT);
+  pinMode(24, INPUT);
+
+  //Serial.begin(9600);
+
+  lcd.begin(20, 4);
+  for(int i = 0; i < 8; i++)
+        lcd.createChar(i, customChars[i]);
+    
+    for(int i = 17;  i >= 0; i--){
+        lcd.clear();
+        drawBanner(i);
+        delay(250);
+    }
+
+  delay(2500);
+  
+  if (p==0){
+    lcd.clear();
+    lcd.home();
+    lcd.blink();
+    lcd.setCursor(2, 0);
+    lcd.print("L");
+    delay(250);
+    lcd.print("E");
+    delay(150);
+    lcd.print(" ");
+    delay(250);
+    lcd.print("C");
+    delay(250);
+    lcd.print("L");
+    delay(250);
+    lcd.print("U");
+    delay(250);
+    lcd.print("B");
+    delay(250);
+    lcd.setCursor(10, 1);
+    lcd.print("S");
+    delay(250);
+    lcd.print("A");
+    delay(250);
+    lcd.print("N");
+    delay(250);
+    lcd.print("D");
+    delay(250);
+    lcd.print("W");
+    delay(250);
+    lcd.print("I");
+    delay(250);
+    lcd.print("C");
+    delay(250);
+    lcd.print("H");
+    lcd.setCursor(3, 2);
+    lcd.print("S");
+    delay(250);
+    lcd.print("T");
+    delay(250);
+    lcd.print("U");
+    delay(250);
+    lcd.print("D");
+    delay(250);
+    lcd.print("I");
+    delay(250);
+    lcd.print("O");
+    delay(250);
+    delay(3000);
+    lcd.noBlink();
+
+    delay(250);
+    lcd.clear();
+    lcd.setCursor(3, 2);
+    lcd.print("LOADING . . . ");
+    delay(250);
+  
+    
+    p=2;
+    delay(3000);
+    
+  }
+
+   lcd.clear();
+    lcd.home();
+    lcd.setCursor(0, 0);
+    lcd.print("WIFI : WaterCase_4");
+
+    lcd.setCursor(1, 1);
+    lcd.print("MDP : kmvwqazh");
+
+    lcd.createChar(0, Data[0]);
+    lcd.setCursor(1, 3);
+    lcd.write(byte(0));
+
+    lcd.createChar(1, Data[1]);
+    lcd.setCursor(2, 3);
+    lcd.write(byte(1));
+    
+    lcd.setCursor(4, 3);
+    lcd.print("IP: 10.3.141.14");
+    p=2;
+}
+
+void drawBanner(int offset){
+    for(int j = 1; j < 3; j++){
+        for(int i = 0; i < 3; i++){
+            lcd.setCursor(offset+i, j);
+            int characterIndex = (j-1) * 3 + i;
+            lcd.write(byte(characterIndex));
+        }
+    }
+    
+    lcd.setCursor(offset+4,1);
+    lcd.write("WATER ANALYSER");
+    lcd.setCursor(offset+7,2);
+    lcd.write("BRIEFCASE");    
+    
+}
+
+//////////////////////////////////////////////////
+//                  loop
+/////////////////////////////////////////////////
+void loop() {
+    //Korzhenevskiy_tick_tack_2::mass_tick();   // check all timers and start if needed
+    check_serial();                           // check if new command is received
+}
+
+
+
+void check_serial() {
+  if (Serial.available() > 0) {
+    String data = Serial.readStringUntil('\n');
+    Serial.print( "NEW MESSAGE : ");
+    Serial.println(data);
+    DeserializationError error = deserializeJson(doc, data);
+    if (error) {
+      Serial.println("JSON parse failed");
+    }
+    else { // {"command":"start"}
+      if ( doc["command"] == "start") {
+        Serial.println( "starting sensors");
+        sensor_timer.start();
+      }
+      else if ( doc["command"] == "stop") {
+        Serial.println( "stopping sensors");
+        sensor_timer.stop ();
+      }//{"setinterval":"999"}
+      else if ( doc.containsKey("setinterval")) {
+        int newinterval = doc["setinterval"];
+        if ((newinterval > 500) && (newinterval < 1000 * 60)) {
+          Serial.print( "setting new sensor interval");
+          Serial.println(newinterval);
+          sensor_timer.setinterval (newinterval);
+        }
+        else Serial.println("this interval is not allowed (500ms-1m)");
+      }
+      else if (doc["command"] == "restart") {
+
+        delay(2000);
+        _reboot_Teensyduino_();
+
+      }
+    }
+
+  }
+}
+
+
+
+void measure_sensors()
+{
+  analogReadResolution(16);
+//---------------------------------------------------------
+//                  Temperature
+//---------------------------------------------------------
+  temperature = readTemperature();        
+  temperature = (round(temperature * 10));
+  temperature = temperature / 10;
+//---------------------------------------------------------
+//                          PH
+//---------------------------------------------------------
+ voltagePH = analogRead(PHPIN) / 65535.0 * 3300; // read the voltage
+  phValue = ph.readPH(voltagePH, temperature); // convert voltage to pH with temperature compensation
+  phValue = (round(phValue * 100));
+  phValue = phValue / 100;
+//---------------------------------------------------------
+//                     Turbidity
+//---------------------------------------------------------
+  voltageTurb = (analogRead(TURBPINSENSOR) / 65535.0 * 3300)/1000;
+  turbidity = ((voltageTurb - 2.128)/-0.7021)*1000;
+//---------------------------------------------------------
+//                        EC
+//---------------------------------------------------------
+  voltageEC = analogRead(ECPIN) / 65535.0 * 3300;
+  ecValue    = ec.readEC(voltageEC, temperature);      // convert voltage to EC with temperature compensation
+  ecValue = ecValue * 1000;
+
+//---------------------------------------------------------
+//                        JSON
+//---------------------------------------------------------
+
+  send_json();
+
+}
+
+
+void  send_json() {
+  //float phValue, temperature, turbidity, turbidityNTU, ec;
+  DynamicJsonDocument doc(256);
+  doc["from"] = "Teensy";
+  JsonObject sensors = doc.createNestedObject("sensors");
+  sensors["temperature"] = temperature;
+  sensors["ph"] = phValue;
+  //sensors["ph_voltage"] = voltagePH;
+  sensors["turbidity"] = turbidity;
+  //sensors["turb_voltage"] = voltageTurb;
+  sensors["ec"] = ecValue;
+  //sensors["ec_voltage"] = voltageEC;
+  unsigned long Time = Teensy3Clock.get();
+  sensors["time"]= Time;
+
+  serializeJson(doc, Serial);
+  Serial.println();
+
+
+
+}
+
+
+
+
+float readTemperature()
+{
+  //add your code here to get the temperature from your temperature sensor
+  //returns the temperature from one DS18S20 in DEG Celsius
+
+  byte data[12];
+  byte addr[8];
+
+  if ( !ds.search(addr)) {
+    //no more sensors on chain, reset search
+    ds.reset_search();
+    return -1000;
+  }
+
+  if ( OneWire::crc8( addr, 7) != addr[7]) {
+    Serial.println("CRC is not valid!");
+    return -1000;
+  }
+
+  if ( addr[0] != 0x10 && addr[0] != 0x28) {
+    Serial.print("Device is not recognized");
+    return -1000;
+  }
+
+  ds.reset();
+  ds.select(addr);
+  ds.write(0x44, 1); // start conversion, with parasite power on at the end
+
+  byte present = ds.reset();
+  ds.select(addr);
+  ds.write(0xBE); // Read Scratchpad
+
+
+  for (int i = 0; i < 9; i++) { // we need 9 bytes
+    data[i] = ds.read();
+  }
+
+  ds.reset_search();
+
+  byte MSB = data[1];
+  byte LSB = data[0];
+
+  float tempRead = ((MSB << 8) | LSB); //using two's compliment
+  float TemperatureSum = tempRead / 16;
+
+  return TemperatureSum;
+}
