@@ -104,8 +104,11 @@ sudo reboot
 > Past :page_facing_up: **main.py** into your local Raspi folder /home/Desktop
 
 > Check if it is OK
+
 _Please think to connect the teensy and the Raspi by a usb cable !_
+
 _Please think to upload the Arduino code into the teensy !_
+
 ```python
 cd Desktop
 ```
