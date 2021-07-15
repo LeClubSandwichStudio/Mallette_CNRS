@@ -47,8 +47,14 @@ sudo apt-get upgrade
 sudo reboot
 ```
 ### Add permission to modify webpage folder
+
+> First write this in terminal :
 ```python
 sudo chmod -R 777 /var/www/
+```
+> Then continue typing in terminal :
+```python
+sudo chmod -R 777 /var/www/*
 ```
 > Check your permission and access
 ```python
