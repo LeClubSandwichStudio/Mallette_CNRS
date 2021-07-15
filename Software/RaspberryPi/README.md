@@ -67,3 +67,15 @@ sudo apt install apache2
 ```python
 sudo apt install libapache2-mod-php
 ```
+```python
+sudo apt remove lighttpd --yes && sudo service apache2 start
+```
+> Check it
+```python
+sudo service --status-all
+```
+
+### Html folder
+> Copy :file_folder: **html** from github repository
+
+> Past :file_folder: **html** into your local Raspi folder /home/var/www
