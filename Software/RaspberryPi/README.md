@@ -55,3 +55,7 @@ chmod -R 777 /var/www/
 ls -l /var/www/html/
 ```
 
+### Clear webpage contents
+> Go to the repository /home/var/www
+> Erase all contents in :file_folder: **www**
+
