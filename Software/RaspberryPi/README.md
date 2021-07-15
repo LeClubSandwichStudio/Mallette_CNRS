@@ -18,11 +18,11 @@
 ### Installation de [RaspAP](https://raspap.com/#quick) 
 
 Dans les paramètres en se connectant au point d’accès,  
-> modifier le mdp en : "kmvwqazh" 
+> modify password to **"kmvwqazh"**
 
-> modifier le nom ddu SSID WIFI en : "Raspberry_OSI_@MAC" 
+> modify SSID WIFI name to **"Raspberry_OSI_@MAC"** 
 
-> modifier l'IP en : "10.3.141.X" 
+> modify IP to **"10.3.141.X"** 
 
 ### Installation [XRDP](https://linuxize.com/post/how-to-install-xrdp-on-raspberry-pi/)
 
@@ -57,5 +57,13 @@ ls -l /var/www/html/
 
 ### Clear webpage contents
 > Go to the repository /home/var/www
+
 > Erase all contents in :file_folder: **www**
 
+### Installation Apache
+```python
+sudo apt install apache2
+```
+```python
+sudo apt install libapache2-mod-php
+```
