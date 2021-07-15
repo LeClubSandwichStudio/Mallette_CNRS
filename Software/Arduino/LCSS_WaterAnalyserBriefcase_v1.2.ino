@@ -320,7 +320,7 @@ void drawBanner(int offset){
 //                  loop
 /////////////////////////////////////////////////
 void loop() {
-    //Korzhenevskiy_tick_tack_2::mass_tick();   // check all timers and start if needed
+    Korzhenevskiy_tick_tack_2::mass_tick();   // check all timers and start if needed
     check_serial();                           // check if new command is received
 }
 
