@@ -411,10 +411,10 @@ void  send_json() {
   sensors["temperature"] = temperature;
   sensors["ph"] = phValue;
   //sensors["ph_voltage"] = voltagePH;
-  sensors["turbidity"] = turbidity;
-  //sensors["turb_voltage"] = voltageTurb;
   sensors["ec"] = ecValue;
   //sensors["ec_voltage"] = voltageEC;
+  sensors["turbidity"] = turbidity;
+  //sensors["turb_voltage"] = voltageTurb;
   unsigned long Time = Teensy3Clock.get();
   sensors["time"]= Time;
 
