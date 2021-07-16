@@ -95,17 +95,17 @@ $(document).ready(function(){
               // Set texts
               $('#div_refresh_temperature').text(d[0]);
               $('#div_refresh_ph').text(d[1]);
-              $('#div_refresh_ec').text(d[3]);
-              $('#div_refresh_turb').text(d[2]);
+              $('#div_refresh_ec').text(d[2]);
+              $('#div_refresh_turb').text(d[3]);
 
               // Set averages
               let avg = sums[0]/nb;
               $('#temp_avg').text(avg.toFixed(2));
               avg = sums[1]/nb;
               $('#ph_avg').text(avg.toFixed(2));
-              avg = sums[3]/nb;
-              $('#ec_avg').text(avg.toFixed(2));
               avg = sums[2]/nb;
+              $('#ec_avg').text(avg.toFixed(2));
+              avg = sums[3]/nb;
               $('#turb_avg').text(avg.toFixed(2));
 
               // Set Progress bars
