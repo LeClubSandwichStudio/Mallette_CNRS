@@ -66,6 +66,7 @@ Signal wire:
 #include <LiquidCrystal.h>
 #include <Math.h>
 
+#include <TimeLib.h>
 
 //////////////////////////////////////////////////
 //                Declarations
@@ -191,9 +192,26 @@ void drawBanner();
 /////////////////////////////////////////////////
 void setup() {
   //sensor_timer.start();
+
+  setSyncProvider(getTeensy3Time);
+  
   Serial.begin(9600);
+  Serial.println("START SERIAL");
+
+  Serial.println("START RTC CHECK");
+  delay(1000);
+  if (timeStatus()!= timeSet) {
+    Serial.println("Unable to sync with the RTC");
+  } else {
+    Serial.println("RTC has set the system time");
+    displayTeensyTime();
+  }
+
+  Serial.println("PH SENSOR BEGIN");
   ph.begin();
+  Serial.println("EC SENSOR BEGIN");
   ec.begin();
+  Serial.println("SET PIN MODE");
   pinMode(2, OUTPUT);
   pinMode(3, OUTPUT);
   pinMode(4, OUTPUT);
@@ -204,6 +222,7 @@ void setup() {
 
   //Serial.begin(9600);
 
+  Serial.println("LCD BEGIN");
   lcd.begin(20, 4);
   for(int i = 0; i < 8; i++)
         lcd.createChar(i, customChars[i]);
@@ -425,8 +444,64 @@ void  send_json() {
 
 }
 
+//---------------------------------------------------------
+//                        TIME FEATURES
+//---------------------------------------------------------
 
+void displayTeensyTime() {
+  if (Serial.available()) {
+    time_t t = processSyncMessage();
+    if (t != 0) {
+      Teensy3Clock.set(t); // set the RTC
+      setTime(t);
+    }
+  }
+  digitalClockDisplay();  
+  delay(1000);
+}
+void digitalClockDisplay() {
+  // digital clock display of the time
+  Serial.print(hour());
+  printDigits(minute());
+  printDigits(second());
+  Serial.print(" ");
+  Serial.print(day());
+  Serial.print(" ");
+  Serial.print(month());
+  Serial.print(" ");
+  Serial.print(year()); 
+  Serial.println(); 
+}
 
+time_t getTeensy3Time()
+{
+  return Teensy3Clock.get();
+}
+
+/*  code to process time sync messages from the serial port   */
+#define TIME_HEADER  "T"   // Header tag for serial time sync message
+
+unsigned long processSyncMessage() {
+  unsigned long pctime = 0L;
+  const unsigned long DEFAULT_TIME = 1357041600; // Jan 1 2013 
+
+  if(Serial.find(TIME_HEADER)) {
+     pctime = Serial.parseInt();
+     return pctime;
+     if( pctime < DEFAULT_TIME) { // check the value is a valid time (greater than Jan 1 2013)
+       pctime = 0L; // return 0 to indicate that the time is not valid
+     }
+  }
+  return pctime;
+}
+
+void printDigits(int digits){
+  // utility function for digital clock display: prints preceding colon and leading 0
+  Serial.print(":");
+  if(digits < 10)
+    Serial.print('0');
+  Serial.print(digits);
+}
 
 float readTemperature()
 {
