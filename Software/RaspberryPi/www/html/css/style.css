@@ -1,60 +1,75 @@
 .btn.active {
-    display: none;
+  display: none;
 }
 
 .message {
-    margin: 0px;
-    padding-top: 10px;
-    color: #3073ac;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 12px;
-    font-weight: bold;
+  margin: 0px;
+  padding-top: 10px;
+  color: #3073ac;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  font-weight: bold;
 }
 
 #valTable {
-    width: 100%;
-    text-align: center;
-    color: black;
-    table-layout: fixed;
-    font-size: min(2.5vw, 1rem);
+  width: 100%;
+  text-align: center;
+  color: black;
+  table-layout: fixed;
+  font-size: min(2vw, 1rem);
 }
 
 #valTable th,
 td {
-    border: 1px solid black;
+  border: 1px solid black;
 }
 
 #valTable th {
-    background-color: lightgrey;
-    border: 1px solid black;
+  background-color: lightgrey;
+  border: 1px solid black;
 }
 
-input[name="start_btn"]{
+input[type="submit"], input[type="button"] {
   color: #FFFFFF;
+  border-radius: 6px;
+  border: none;
+  padding: 1rem 2rem;
+  width: 33%;
+  max-width: 100px;
+}
+
+input[name="start_btn"] {
   background-color: #1CC88A;
-  border-radius: 6px;
-  border: none;
-  padding: 12.5px 28px;
 }
 
-input[name="stop_btn"]{
-  color: #FFFFFF;
+input[name="stop_btn"] {
   background-color: #E74A3B;
-  border-radius: 6px;
-  border: none;
-  padding: 12.5px 28px;
 }
 
-table{
+table {
   width: 100%;
   text-align: center;
-  color : black;
+  color: black;
 }
 
-table, th, tr{
-  border : 1px solid black;
+table, th, tr {
+  border: 1px solid black;
 }
 
-th{
-  background-color : lightgrey;
+th {
+  background-color: lightgrey;
+}
+
+.top_btn {
+  justify-content: space-around;
+}
+
+@media only screen and (min-width: 768px) {
+  input[type="submit"], input[type="button"] {
+    margin-right: 2rem;
+  }
+
+  .top_btn {
+    justify-content: flex-start;
+  }
 }
