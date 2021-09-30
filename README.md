@@ -2,8 +2,7 @@
 Water Analyser Briefcase for scientist
 > Description
 
-> 3D View
-<iframe src="https://leclubsandwich.autodesk360.com/shares/public/SH35dfcQT936092f0e4347932a2fa5c365e9?mode=embed" width="1024" height="768" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"  frameborder="0"></iframe>
+> [3D View](https://a360.co/3F3qp8W)
 
 # Key Features
 > Hardware
