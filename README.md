@@ -1,13 +1,17 @@
 # Mallette_CNRS
 Water Analyser Briefcase for scientist
-> Description
+> ### Description
 
-> [3D View](https://a360.co/3F3qp8W) - models designed by Mathorel Remi (2021)
+> ### [3D View](https://a360.co/3F3qp8W) - models designed by Mathorel Remi (2021)
+
 ![mallette screenshot](https://github.com/LeClubSandwichStudio/Mallette_CNRS/blob/main/Medias/MALLETTE_SCREENSHOT.png)
 
 # Key Features
-> Hardware
+> ### Hardware
 
+* Protection Case : 
+  * Case : [Pelican 1200](https://www.pelican.com/us/en/product/cases/protector/1200) 
+  * Panel Frame : [Pelican 1200PF](https://www.pelican.com/us/en/accessory/cases/special-application-panel-frame/1200pf)
 * MCU : [Teensy 3.6](https://www.pjrc.com/store/teensy36.html)
 * OS : Raspberry Pi 4B - [RaspOS](https://www.raspberrypi.org/software/)
 * Sensors : 
@@ -16,7 +20,7 @@ Water Analyser Briefcase for scientist
   * Temperature
   * Turbidity
 
-> Software
+> ### Software
 
 # Summary
 
