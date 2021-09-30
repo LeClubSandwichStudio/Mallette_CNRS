@@ -3,6 +3,7 @@ Water Analyser Briefcase for scientist
 > Description
 
 > [3D View](https://a360.co/3F3qp8W) - models designed by Mathorel Remi (2021)
+![mallette screenshot](https://github.com/LeClubSandwichStudio/Mallette_CNRS/blob/main/Medias/MALLETTE_SCREENSHOT.png)
 
 # Key Features
 > Hardware
