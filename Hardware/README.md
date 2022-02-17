@@ -15,6 +15,8 @@
 > Shield
 - Custom LCSS Teensy Shield
 
+https://a360.co/3LIjGnY
+
 > Others
 - Li-Ion Charger
 - Li-Iion Battery
