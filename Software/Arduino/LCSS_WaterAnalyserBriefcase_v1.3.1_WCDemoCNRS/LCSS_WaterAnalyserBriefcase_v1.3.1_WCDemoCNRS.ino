@@ -1,16 +1,7 @@
 /*
- * file LCSS_WaterAnalyserBriefcase_v1.1
- * 
- * We use different example codes like : 
- *
- * >>> file DFRobot_EC.ino + libraries
- * @ https://github.com/DFRobot/DFRobot_EC
- * >>> file DFRobot_PH.ino + libraries
- * @ https://github.com/DFRobot/DFRobot_PH
- * 
- * 
- * VERSION 1.3 : 
- * - add voltage values for each sensor in json
+ * file LCSS_WaterAnalyserBriefcase_v1.3.1
+ * THIS CODE IS USED FOR CNRS WTAER BRIEFCASE UNIT
+ * Modified 19 november 2021 by Antoine BERR
  */
 
 //////////////////////////////////////////////////
@@ -303,10 +294,10 @@ void setup() {
    lcd.clear();
     lcd.home();
     lcd.setCursor(0, 0);
-    lcd.print("WIFI : WaterCase_2");
+    lcd.print("WIFI: WaterCase_Demo");
 
     lcd.setCursor(1, 1);
-    lcd.print("MDP : kmvwqazh");
+    lcd.print("MDP: kmvwqazh");
 
     lcd.createChar(0, Data[0]);
     lcd.setCursor(1, 3);
@@ -317,7 +308,7 @@ void setup() {
     lcd.write(byte(1));
     
     lcd.setCursor(4, 3);
-    lcd.print("IP: 10.3.141.12");
+    lcd.print("IP: 10.3.141.1");
     p=2;
 }
 
@@ -424,6 +415,10 @@ void measure_sensors()
   // CALCULATE TURB VALUE
   // Please that voltage needs to be in Volts to integrate the formula
   turbidity = ((voltageTurb/1000 - 2.128)/-0.7021)*1000;
+
+  // Precize value with offset calculated with scientist per briefcase
+  turbidity =  0.893 * turbidity - 52.658;
+  
   // ARRONDI AVEC 1 DECIMAL
   turbidity = (round(turbidity * 10));
   turbidity = turbidity / 10;

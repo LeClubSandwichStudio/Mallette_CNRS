@@ -424,6 +424,8 @@ void measure_sensors()
   // CALCULATE TURB VALUE
   // Please that voltage needs to be in Volts to integrate the formula
   turbidity = ((voltageTurb/1000 - 2.128)/-0.7021)*1000;
+  // Precize value with offset calculated with scientist per briefcase
+  turbidity =  1.0473 * turbidity + 72.376;
   // ARRONDI AVEC 1 DECIMAL
   turbidity = (round(turbidity * 10));
   turbidity = turbidity / 10;

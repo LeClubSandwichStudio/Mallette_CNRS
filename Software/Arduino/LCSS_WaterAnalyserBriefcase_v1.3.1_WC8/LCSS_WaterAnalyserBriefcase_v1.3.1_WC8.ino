@@ -1,5 +1,5 @@
 /*
- * file LCSS_WaterAnalyserBriefcase_v1.1
+ * file LCSS_WaterAnalyserBriefcase_v1.3.1
  * 
  * We use different example codes like : 
  *
@@ -303,7 +303,7 @@ void setup() {
    lcd.clear();
     lcd.home();
     lcd.setCursor(0, 0);
-    lcd.print("WIFI : WaterCase_2");
+    lcd.print("WIFI : WaterCase_8");
 
     lcd.setCursor(1, 1);
     lcd.print("MDP : kmvwqazh");
@@ -317,7 +317,7 @@ void setup() {
     lcd.write(byte(1));
     
     lcd.setCursor(4, 3);
-    lcd.print("IP: 10.3.141.12");
+    lcd.print("IP: 10.3.141.18");
     p=2;
 }
 
@@ -424,6 +424,8 @@ void measure_sensors()
   // CALCULATE TURB VALUE
   // Please that voltage needs to be in Volts to integrate the formula
   turbidity = ((voltageTurb/1000 - 2.128)/-0.7021)*1000;
+  // Precize value with offset calculated with scientist per briefcase
+  turbidity =  turbidity + 200;
   // ARRONDI AVEC 1 DECIMAL
   turbidity = (round(turbidity * 10));
   turbidity = turbidity / 10;
