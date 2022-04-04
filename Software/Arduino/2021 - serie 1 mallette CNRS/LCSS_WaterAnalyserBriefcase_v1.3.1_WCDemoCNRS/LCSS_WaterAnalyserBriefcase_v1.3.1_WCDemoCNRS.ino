@@ -1,7 +1,15 @@
 /*
- * file LCSS_WaterAnalyserBriefcase_v1.3.1
+ * file LCSS_WaterAnalyserBriefcase_v1.3.2
  * THIS CODE IS USED FOR CNRS WTAER BRIEFCASE UNIT
- * Modified 19 november 2021 by Antoine BERR
+ * Modified 18 march 2022 by Antoine BERR
+ * 
+ * v1.3.2 : 
+ * BIG UPDATES
+ * > add LBO control to check battery status
+ * > add battery check during setup & loop
+ * GLOBAL CHANGES
+ * > clean some lines
+ * > add some serial comments on setup 
  */
 
 //////////////////////////////////////////////////
@@ -43,6 +51,10 @@ Signal wire:
 #define ECPIN  17
 #define TURBPINSENSOR A21
 
+#define LBO 28
+#define LBO_PULLUP 30
+int lbo_state;
+
 
 //////////////////////////////////////////////////
 //                  Libraries
@@ -78,101 +90,19 @@ int i=0;
 int p=0;
 
 byte customChars[8][8] = {
-    {
-        B00000,
-        B00000,
-        B00000,
-        B00000,
-        B00000,
-        B00001,
-        B00011,
-        B00101
-    },{
-        B00000,
-        B00000,
-        B00000,
-        B00010,
-        B10000,
-        B01101,
-        B11000,
-        B11110
-    },{
-        B00000,
-        B00000,
-        B00010,
-        B01000,
-        B01100,
-        B10010,
-        B01100,
-        B00010
-    },{
-        B01110,
-        B01110,
-        B01111,
-        B11110,
-        B11110,
-        B11111,
-        B11111,
-        B11111
-    },{
-        B11100,
-        B11100,
-        B01100,
-        B11110,
-        B10111,
-        B11001,
-        B00111,
-        B11101
-    },{
-        B10000,
-        B00000,
-        B00000,
-        B00000,
-        B00000,
-        B10000,
-        B11100,
-        B11111
-    },{
-        B11111,
-        B11111,
-        B00000,
-        B00000,
-        B11111,
-        B00000,
-        B11111,
-        B11111
-    },{
-        B11111,
-        B11111,
-        B00000,
-        B11111,
-        B00000,
-        B00000,
-        B00000,
-        B00000
-    }
+    {B00000,B00000,B00000,B00000,B00000,B00001,B00011,B00101},
+    {B00000,B00000,B00000,B00010,B10000,B01101,B11000,B11110},
+    {B00000,B00000,B00010,B01000,B01100,B10010,B01100,B00010},
+    {B01110,B01110,B01111,B11110,B11110,B11111,B11111,B11111},
+    {B11100,B11100,B01100,B11110,B10111,B11001,B00111,B11101},
+    {B10000,B00000,B00000,B00000,B00000,B10000,B11100,B11111},
+    {B11111,B11111,B00000,B00000,B11111,B00000,B11111,B11111},
+    {B11111,B11111,B00000,B11111,B00000,B00000,B00000,B00000}
 };
 
 byte Data[2][8] = {
-    {
-      B00000,
-  B11111,
-  B01010,
-  B00111,
-  B00010,
-  B00010,
-  B00010,
-  B00010
-    },{
-  B00000,
-  B11000,
-  B10000,
-  B00001,
-  B00001,
-  B00101,
-  B10101,
-  B10101
-    }
+    {B00000,B11111,B01010,B00111,B00010,B00010,B00010,B00010},
+    {B00000,B11000,B10000,B00001,B00001,B00101,B10101,B10101}
 };
 
 int val=0;
@@ -190,7 +120,6 @@ void setup() {
   
   Serial.begin(9600);
   Serial.println("START SERIAL");
-
   Serial.println("START RTC CHECK");
   delay(1000);
   if (timeStatus()!= timeSet) {
@@ -212,104 +141,55 @@ void setup() {
   pinMode(9, OUTPUT);
   pinMode(10, OUTPUT);
   pinMode(24, INPUT);
-
-  //Serial.begin(9600);
+  // init LBO pins
+  pinMode(30, INPUT_PULLUP);
+  pinMode(28, OUTPUT);
 
   Serial.println("LCD BEGIN");
   lcd.begin(20, 4);
   for(int i = 0; i < 8; i++)
-        lcd.createChar(i, customChars[i]);
-    
+    lcd.createChar(i, customChars[i]);    
     for(int i = 17;  i >= 0; i--){
         lcd.clear();
         drawBanner(i);
         delay(250);
     }
-
   delay(2500);
   
   if (p==0){
-    lcd.clear();
-    lcd.home();
-    lcd.blink();
-    lcd.setCursor(2, 0);
-    lcd.print("L");
-    delay(250);
-    lcd.print("E");
-    delay(150);
-    lcd.print(" ");
-    delay(250);
-    lcd.print("C");
-    delay(250);
-    lcd.print("L");
-    delay(250);
-    lcd.print("U");
-    delay(250);
-    lcd.print("B");
-    delay(250);
-    lcd.setCursor(10, 1);
-    lcd.print("S");
-    delay(250);
-    lcd.print("A");
-    delay(250);
-    lcd.print("N");
-    delay(250);
-    lcd.print("D");
-    delay(250);
-    lcd.print("W");
-    delay(250);
-    lcd.print("I");
-    delay(250);
-    lcd.print("C");
-    delay(250);
-    lcd.print("H");
-    lcd.setCursor(3, 2);
-    lcd.print("S");
-    delay(250);
-    lcd.print("T");
-    delay(250);
-    lcd.print("U");
-    delay(250);
-    lcd.print("D");
-    delay(250);
-    lcd.print("I");
-    delay(250);
-    lcd.print("O");
-    delay(250);
-    delay(3000);
-    lcd.noBlink();
+    
+    lcd_print_LCSS_banner();
 
     delay(250);
     lcd.clear();
     lcd.setCursor(3, 2);
     lcd.print("LOADING . . . ");
     delay(250);
-  
-    
     p=2;
     delay(3000);
     
   }
 
-   lcd.clear();
+    lcd.clear();
     lcd.home();
     lcd.setCursor(0, 0);
     lcd.print("WIFI: WaterCase_Demo");
-
     lcd.setCursor(1, 1);
     lcd.print("MDP: kmvwqazh");
-
     lcd.createChar(0, Data[0]);
     lcd.setCursor(1, 3);
     lcd.write(byte(0));
-
     lcd.createChar(1, Data[1]);
     lcd.setCursor(2, 3);
-    lcd.write(byte(1));
-    
+    lcd.write(byte(1));  
     lcd.setCursor(4, 3);
     lcd.print("IP: 10.3.141.1");
     p=2;
+
+    Serial.println("CHECK BATTERY STATUS");
+    delay(2000);
+    SETUP_check_battery();
+    Serial.println("CHECK BATTERY : done !");
 }
 
 void drawBanner(int offset){
@@ -328,18 +208,46 @@ void drawBanner(int offset){
     
 }
 
+void SETUP_check_battery(){
+  lbo_state = digitalRead(LBO_PULLUP);
+    if (lbo_state == HIGH) {
+      digitalWrite(LBO, LOW);
+      Serial.println("this is a HIGH value --- Battery is OK");
+    } else {
+      digitalWrite(LBO, HIGH);
+      Serial.println("this is a LOW value --- Battery is LOW sorry... Please power briefcase !");
+    }
+  }
+
+ void LOOP_check_battery(){
+  lbo_state = digitalRead(LBO_PULLUP);
+    if (lbo_state == HIGH) {
+      digitalWrite(LBO, LOW);
+      //Serial.println("this is a HIGH value --- Battery is OK");
+    } else {
+      digitalWrite(LBO, HIGH);
+      //Serial.println("this is a LOW value --- Battery is LOW sorry... Please power briefcase !");
+    }
+  }
+
 //////////////////////////////////////////////////
 //                  loop
 /////////////////////////////////////////////////
 void loop() {
     Korzhenevskiy_tick_tack_2::mass_tick();   // check all timers and start if needed
     check_serial();                           // check if new command is received
+    
 }
 
 
+//---------------------------------------------------------
+//                        SERIAL FEATURES
+//---------------------------------------------------------
 
 void check_serial() {
+  LOOP_check_battery();
   if (Serial.available() > 0) {
+    LOOP_check_battery();
     String data = Serial.readStringUntil('\n');
     Serial.print( "NEW MESSAGE : ");
     Serial.println(data);
@@ -377,6 +285,9 @@ void check_serial() {
 }
 
 
+//---------------------------------------------------------
+//                        SENSORS FEATURES
+//---------------------------------------------------------
 
 void measure_sensors()
 {
@@ -574,3 +485,59 @@ float readTemperature()
 
   return TemperatureSum;
 }
+
+//---------------------------------------------------------
+//                        LCD SCREENS
+//---------------------------------------------------------
+
+void lcd_print_LCSS_banner(){
+  lcd.clear();
+  lcd.home();
+  lcd.blink();
+  lcd.setCursor(2, 0);
+  lcd.print("L");
+  delay(250);
+  lcd.print("E");
+  delay(150);
+  lcd.print(" ");
+  delay(250);
+  lcd.print("C");
+  delay(250);
+  lcd.print("L");
+  delay(250);
+  lcd.print("U");
+  delay(250);
+  lcd.print("B");
+  delay(250);
+  lcd.setCursor(10, 1);
+  lcd.print("S");
+  delay(250);
+  lcd.print("A");
+  delay(250);
+  lcd.print("N");
+  delay(250);
+  lcd.print("D");
+  delay(250);
+  lcd.print("W");
+  delay(250);
+  lcd.print("I");
+  delay(250);
+  lcd.print("C");
+  delay(250);
+  lcd.print("H");
+  lcd.setCursor(3, 2);
+  lcd.print("S");
+  delay(250);
+  lcd.print("T");
+  delay(250);
+  lcd.print("U");
+  delay(250);
+  lcd.print("D");
+  delay(250);
+  lcd.print("I");
+  delay(250);
+  lcd.print("O");
+  delay(250);
+  delay(3000);
+  lcd.noBlink();
+  }
