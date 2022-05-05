@@ -15,3 +15,7 @@ Sample Arduino code to use Water Briefcase Analyzer version 1.2
 
 - DFROBOT EC : https://github.com/DFRobot/DFRobot_EC
 - DFROBOT PH : https://github.com/DFRobot/DFRobot_PH
+
+# HOW TO RUN ARDUINO
+
+- download Arduino software here : https://www.arduino.cc/en/software
