@@ -41,6 +41,17 @@ Signal wire:
   {"command":"stop"}
   {"command":"restart"}
   {"setinterval":"999"}
+
+ *  PH Calibration：
+ *   enterph -> enter the PH calibration mode
+ *   calph   -> calibrate with the standard buffer solution, two buffer solutions(4.0 and 7.0) will be automaticlly recognized
+ *   exitph  -> save the calibrated parameters and exit from PH calibration mode
+ *
+ *  EC Calibration：
+ *   enterec -> enter the EC calibration mode
+ *   calec   -> calibrate with the standard buffer solution, two buffer solutions(1413us/cm and 12.88ms/cm) will be automaticlly recognized
+ *   exitec  -> save the calibrated parameters and exit from EC calibration mode
+  
 */
 
 //////////////////////////////////////////////////
