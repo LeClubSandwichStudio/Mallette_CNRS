@@ -327,7 +327,11 @@ void measure_sensors()
   // Please that voltage needs to be in Volts to integrate the formula
   turbidity = ((voltageTurb/1000 - 2.128)/-0.7021)*1000;
 
+//---------------------------------------------------------
+//                     Turbidity OFFSET here
+//---------------------------------------------------------
   // Precize value with offset calculated with scientist per briefcase
+  
   turbidity =  0.893 * turbidity - 52.658;
   
   // ARRONDI AVEC 1 DECIMAL
